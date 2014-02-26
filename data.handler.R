@@ -10,28 +10,31 @@ library(maptools)
 
 
 
-# Import Data -------------------------------------------------------------
+# Import MI Ed Data & CPI -------------------------------------------------------------
 
 # Input years to analyze
-years_to_include<- 2004:2012
-ct_years<- length(years_to_include)
-bulletin1014.list<- list() 
+year.to.include <- 2004:2012
+date.range <- c('2004-12-31', '2012-12-31') # used with cpi
+
+ct_years <- length(year.to.include)
+bulletin1014.list <- list() 
 for (i in 1:ct_years) {
-    fldnm<- paste("y", years_to_include[i], sep="") # dynamic field name for list
+    fldnm <- paste("y", year.to.include[i], sep = "") # dynamic field name for list
     
     # Dynamically assign field to list for each year of data
-    bulletin1014.list[[fldnm]]<- fread(paste(years_to_include[i],"Bulletin1014.csv", sep=""))
-    bulletin1014.list[[fldnm]]$YEAR<- years_to_include[i] # add a column specifying the data year
+    bulletin1014.list[[fldnm]] <- fread(paste(year.to.include[i], "Bulletin1014.csv", sep = ""))
+    bulletin1014.list[[fldnm]]$YEAR <- year.to.include[i] # add a column specifying the data year
     
     setnames(bulletin1014.list[[fldnm]], toupper(names(bulletin1014.list[[fldnm]]))) # ensure case
     
     ## Add things here:
-    # inflation-adjusted
     # governor & party
     # party in house, in senate (breakups)
     # recession flag
 }
 
+# Inflation data
+cpi <- fread('MI_ed_shinyapp/FRED.cpi.headline.annual.csv')
 
 # Combine data, and standardize -------------------------------------------
 
@@ -49,18 +52,33 @@ bulletin1014.dt$DISTCOUNTY <- str_replace_all(bulletin1014.dt$DISTCOUNTY,"\\.","
 
 # Aggregate by year, county    --------------------------------------------
 
-bulletin1014.county <- bulletin1014.dt[,list(TOTEXP.COUNTY = sum(TOTEXP),
-                                             TOTREV.COUNTY = sum(TOTREV),
-                                             TCHR_SAL.COUNTY = sum(T.SAL),
-                                             TCHR_NUM.COUNTY = sum(P.TCHR),
-                                             PUPIL_NUM.COUNTY = sum(AVG.FTE),
-                                             EXP.PER.PUPIL.COUNTY = sum(TOTEXP)/sum(AVG.FTE),
-                                             REV.PER.PUPIL.COUNTY = sum(TOTREV)/sum(AVG.FTE),
-                                             TCHR_SA.PER.PUPIL.COUNTY = sum(T.SAL)/sum(AVG.FTE),
-                                             PUPIL.PER.TCHR.COUNTY = sum(AVG.FTE)/sum(P.TCHR)
-                                             ),                                       
+# sum totals of data into counties, for comparison
+bulletin1014.county <- bulletin1014.dt[, list(TOTEXP.COUNTY = sum(TOTEXP),
+                                              TOTREV.COUNTY = sum(TOTREV),
+                                              TCHR.SAL.COUNTY = sum(T.SAL),
+                                              TCHR.NUM.COUNTY = sum(P.TCHR),
+                                              PUPIL.NUM.COUNTY = sum(AVG.FTE)
+                                              ),                                       
                                        by= list(YEAR, DISTCOUNTY)]
 
+# inflation adjust
+cpi$adjuster <- cpi[Date == date.range[2], Value] / cpi[, Value] # create cpi adjustor, to inflation adjust
+cpi <- cpi[Date >= date.range[1] & Date <= date.range[2]] # date.range = 2004-12-31, 2012-12-31
+cpi <- cpi[order(Date)] # to match ordered date format of .SD 
+
+# inflation adjust and combine adjust back with original dt    
+bulletin1014.county[, `:=` (TOTEXP.COUNTY = TOTEXP.COUNTY * cpi$adjuster,
+                            TOTREV.COUNTY = TOTREV.COUNTY * cpi$adjuster,
+                            TCHR.SAL.COUNTY = TCHR.SAL.COUNTY * cpi$adjuster), 
+                    by = DISTCOUNTY]
+
+# create new ratio variables
+bulletin1014.county[, `:=` (EXP.PER.PUPIL.COUNTY     = TOTEXP.COUNTY / PUPIL.NUM.COUNTY,
+                            REV.PER.PUPIL.COUNTY     = TOTREV.COUNTY / PUPIL.NUM.COUNTY,
+                            TCHR_SA.PER.PUPIL.COUNTY = TCHR.SAL.COUNTY / PUPIL.NUM.COUNTY,
+                            TCHR_SAL.AVG.COUNTY      = TCHR.SAL.COUNTY / TCHR.NUM.COUNTY,
+                            PUPIL.PER.TCHR.COUNTY    = PUPIL.NUM.COUNTY / TCHR.NUM.COUNTY)]                    
+            
 
 
 # Import map and combine --------------------------------------------------
