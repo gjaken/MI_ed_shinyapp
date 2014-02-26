@@ -22,7 +22,7 @@ shinyUI(pageWithSidebar(
                         "Select Financial Measure",
                         choices = c("Expenditure per Pupil"    = "EXP.PER.PUPIL.COUNTY",
                                     "Revenue per Pupil"        = "REV.PER.PUPIL.COUNTY",
-                                    "Teacher Salary per Pupil" = "TCHR_SA.PER.PUPIL.COUNTY",
+                                    "Average Teacher Salary"   = "TCHR_SAL.COUNTY",
                                     "Student/Teacher Ratio"    = "PUPIL.PER.TCHR.COUNTY"),
                         selected = "EXP.PER.PUPIL.COUNTY"
                         ) # input for dataset choice 
