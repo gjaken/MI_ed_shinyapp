@@ -11,9 +11,9 @@ MIcounty.map.dt <- fread("MIcounty.map.dt.csv") # Note: Adjusted for Inflation
 
 
 ## Round Data for County Map
-MIcounty.map.dt[, `:=` (EXP.PER.PUPIL.COUNTY = round(EXP.PER.PUPIL.COUNTY,-2),
-                        REV.PER.PUPIL.COUNTY = round(REV.PER.PUPIL.COUNTY,-2),
-                        TCHR_SAL.COUNTY = round(TCHR_SAL.COUNTY,-2),
+MIcounty.map.dt[, `:=` (EXP.PER.PUPIL.COUNTY  = round(EXP.PER.PUPIL.COUNTY,-2),
+                        REV.PER.PUPIL.COUNTY  = round(REV.PER.PUPIL.COUNTY,-2),
+                        TCHR_SAL.AVG.COUNTY   = round(TCHR_SAL.AVG.COUNTY,-2),
                         PUPIL.PER.TCHR.COUNTY = round(PUPIL.PER.TCHR.COUNTY,0)
                         )]
 
@@ -49,9 +49,9 @@ shinyServer(
             
             # select dataset and color    
             fld.clr <- switch(input$fldnm,
-                           "EXP.PER.PUPIL.COUNTY" = "darkgreen",
-                           "REV.PER.PUPIL.COUNTY" = "darkblue",
-                           "TCHR_SAL.COUNTY" = "darkorchid",
+                           "EXP.PER.PUPIL.COUNTY"  = "darkgreen",
+                           "REV.PER.PUPIL.COUNTY"  = "darkblue",
+                           "TCHR_SAL.AVG.COUNTY"   = "darkorchid",
                            "PUPIL.PER.TCHR.COUNTY" = "darkred")
              
             # code for chart
@@ -59,7 +59,7 @@ shinyServer(
                        aes(x = long, y = lat, group = group)) + 
                 labs(title = "Michigan Education: Per Pupil Finances") +
                 geom_polygon(aes_string(fill = input$fldnm)) + 
-                scale_fill_gradient(low = fld.clr, high = "white") + 
+                scale_fill_gradient(high = fld.clr, low = "white") + 
                 facet_wrap(~ YEAR, ncol = 3) + 
                 geom_path(color = "black", linestyle = 2) +
                 coord_equal() +

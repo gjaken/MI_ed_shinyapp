@@ -55,27 +55,29 @@ bulletin1014.dt$DISTCOUNTY <- str_replace_all(bulletin1014.dt$DISTCOUNTY,"\\.","
 # sum totals of data into counties, for comparison
 bulletin1014.county <- bulletin1014.dt[, list(TOTEXP.COUNTY = sum(TOTEXP),
                                               TOTREV.COUNTY = sum(TOTREV),
-                                              TCHR_SAL.COUNTY = sum(T.SAL),
-                                              TCHR_NUM.COUNTY = sum(P.TCHR),
-                                              PUPIL_NUM.COUNTY = sum(AVG.FTE)
+                                              TCHR.SAL.COUNTY = sum(T.SAL),
+                                              TCHR.NUM.COUNTY = sum(P.TCHR),
+                                              PUPIL.NUM.COUNTY = sum(AVG.FTE)
                                               ),                                       
                                        by= list(YEAR, DISTCOUNTY)]
 
 # inflation adjust
 cpi$adjuster <- cpi[Date == date.range[2], Value] / cpi[, Value] # create cpi adjustor, to inflation adjust
 cpi <- cpi[Date >= date.range[1] & Date <= date.range[2]] # date.range = 2004-12-31, 2012-12-31
+cpi <- cpi[order(Date)] # to match ordered date format of .SD 
 
 # inflation adjust and combine adjust back with original dt    
 bulletin1014.county[, `:=` (TOTEXP.COUNTY = TOTEXP.COUNTY * cpi$adjuster,
                             TOTREV.COUNTY = TOTREV.COUNTY * cpi$adjuster,
-                            TCHR_SAL.COUNTY = TCHR_SAL.COUNTY * cpi$adjuster), 
+                            TCHR.SAL.COUNTY = TCHR.SAL.COUNTY * cpi$adjuster), 
                     by = DISTCOUNTY]
 
 # create new ratio variables
-bulletin1014.county[, `:=` (EXP.PER.PUPIL.COUNTY = TOTEXP.COUNTY / PUPIL_NUM.COUNTY,
-                            REV.PER.PUPIL.COUNTY = TOTREV.COUNTY / PUPIL_NUM.COUNTY,
-                            TCHR_SA.PER.PUPIL.COUNTY = TCHR_SAL.COUNTY / PUPIL_NUM.COUNTY,
-                            PUPIL.PER.TCHR.COUNTY = PUPIL_NUM.COUNTY / TCHR_NUM.COUNTY)]                    
+bulletin1014.county[, `:=` (EXP.PER.PUPIL.COUNTY     = TOTEXP.COUNTY / PUPIL.NUM.COUNTY,
+                            REV.PER.PUPIL.COUNTY     = TOTREV.COUNTY / PUPIL.NUM.COUNTY,
+                            TCHR_SA.PER.PUPIL.COUNTY = TCHR.SAL.COUNTY / PUPIL.NUM.COUNTY,
+                            TCHR_SAL.AVG.COUNTY      = TCHR.SAL.COUNTY / TCHR.NUM.COUNTY,
+                            PUPIL.PER.TCHR.COUNTY    = PUPIL.NUM.COUNTY / TCHR.NUM.COUNTY)]                    
             
 
 
