@@ -5,8 +5,8 @@ library(data.table)
 
 # Read in dataset ---------------------------------------------------------
 
-bulletin1014.dt <- fread("bulletin1014.dt.csv") 
-MIcounty.map.dt <- fread("MIcounty.map.dt.csv")
+bulletin1014.dt <- fread("bulletin1014.dt.csv") # Note: Not Adjusted for Inflation
+MIcounty.map.dt <- fread("MIcounty.map.dt.csv") # Note: Adjusted for Inflation
 # setkey if it seems useful
 
 
