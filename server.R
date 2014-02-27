@@ -5,9 +5,25 @@ library(data.table)
 
 # Read in dataset ---------------------------------------------------------
 
-bulletin1014.dt <- fread("bulletin1014.dt.csv") # Note: Not Adjusted for Inflation
-MIcounty.map.dt <- fread("MIcounty.map.dt.csv") # Note: Adjusted for Inflation
+# bulletin1014.dt <- fread("bulletin1014.dt.csv")       # Note: NOT Adjusted for Inflation
+bulletin1014.county <- fread("bulletin1014.county.csv") # Note: Adjusted for Inflation
+MIcounty.map.dt <- fread("MIcounty.map.dt.csv")         # Note: Adjusted for Inflation
 # setkey if it seems useful
+
+# create totals data at state level
+bulletin1014.state <- bulletin1014.county[, list(PUPIL.NUM.STATE = sum(PUPIL.NUM.COUNTY), 
+                                                 TOTREV.STATE    = sum(TOTREV.COUNTY),
+                                                 TOTEXP.STATE    = sum(TOTEXP.COUNTY),
+                                                 TCHR.NUM.STATE  = sum(TCHR.NUM.COUNTY),
+                                                 TCHR.SAL.STATE  = sum(TCHR.SAL.COUNTY)), 
+                                          by = YEAR]
+
+# create new ratio variables
+bulletin1014.state[, `:=` (REV.PER.PUPIL.STATE     = TOTREV.STATE / PUPIL.NUM.STATE,
+                           EXP.PER.PUPIL.STATE     = TOTEXP.STATE / PUPIL.NUM.STATE,
+                           TCHR_SA.PER.PUPIL.STATE = TCHR.SAL.STATE / PUPIL.NUM.STATE,
+                           TCHR_SAL.AVG.STATE      = TCHR.SAL.STATE / TCHR.NUM.STATE,
+                           PUPIL.PER.TCHR.STATE    = PUPIL.NUM.STATE / TCHR.NUM.STATE)]
 
 
 ## Round Data for County Map

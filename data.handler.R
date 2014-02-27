@@ -96,3 +96,4 @@ MIcounty.map.dt<- merge(MIcounty.map.dt,county.centers, by="subregion", allow.ca
 
 write.csv(bulletin1014.dt, "MI_ed_shinyapp/bulletin1014.dt.csv", row.names=FALSE)
 write.csv(MIcounty.map.dt, "MI_ed_shinyapp/MIcounty.map.dt.csv", row.names=FALSE)
+write.csv(bulletin1014.county, "MI_ed_shinyapp/bulletin1014.county.csv", row.names=FALSE)
