@@ -38,13 +38,11 @@ shinyUI(pageWithSidebar(
 #         h3("Michigan Education: Financial Data "),
         
         tabsetPanel(
-#             tabPanel("State Summary", 
-#                      tableOutput("stateTotals.dt"),
-#                      plotOutput("stateTotals.plot")),
+            tabPanel("State Summary", 
+                     tableOutput("stateTotals.dt"),
+                     plotOutput("stateTotals.plot")),
             tabPanel("County Summary", # also, a Histogram, faceted on year
-                     plotOutput("MIcounty.facet.map", height="600px")),
-            tabPanel("County Summary by Year" # Choropleth and Histogram, by single year
-                     ),            
+                     plotOutput("MIcounty.facet.map", height="600px")),   
             tabPanel("County Drilldown Comparison" #, table of county totals comparison, and plot; 2 selectors
                      )
             )

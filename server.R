@@ -37,6 +37,7 @@ MIcounty.map.dt[, `:=` (EXP.PER.PUPIL.COUNTY  = round(EXP.PER.PUPIL.COUNTY,-2),
 shinyServer(
     function(input, output) {
         
+        
         output$outputSlider <- renderUI({    
             # set min, max, med, sd variables based on dataset            
             c.med <- median(MIcounty.map.dt[[input$fldnm]])
@@ -84,6 +85,36 @@ shinyServer(
                       axis.ticks = element_blank())
             
             print(p)
+        })
+        
+        output$stateTotals.dt <- renderTable({
+            bulletin1014.state[, list(YEAR, REV.PER.PUPIL.STATE, EXP.PER.PUPIL.STATE, TCHR_SA.PER.PUPIL.STATE, TCHR_SAL.AVG.STATE, PUPIL.PER.TCHR.STATE)]
+        })
+        
+        output$stateTotals.plot <- renderPlot({
+            # facet label function
+            findata.names <- list(
+                "REV.PER.PUPIL.STATE" = "Revenue per Pupil",
+                "EXP.PER.PUPIL.STATE" = "Expenditure per Pupil",
+                "TCHR_SA.PER.PUPIL.STATE" = "Teacher Salary per Pupil",
+                "TCHR_SAL.AVG.STATE" = "Average Teacher Salary",
+                "PUPIL.PER.TCHR.STATE" = "Student / Teacher Ratio")
+            
+            findata_labeller <- function(variable, value) {
+                return(findata.names[value])
+            }
+            
+            # melt and filter for plotting                 
+            p <- ggplot(data = melt(bulletin1014.state[, list(YEAR, REV.PER.PUPIL.STATE, EXP.PER.PUPIL.STATE, TCHR_SA.PER.PUPIL.STATE, TCHR_SAL.AVG.STATE, PUPIL.PER.TCHR.STATE)],
+                                    id="YEAR")) +
+                geom_line(aes(x = YEAR, y = value, color = variable, name = "datasets"), size = 1) +
+                facet_grid(variable ~ ., scale = 'free_y', labeller = findata_labeller)+
+                xlab("Year") + 
+                ylab("Values (in 2012 $)") +
+                ggtitle("Michigan Educational Financial Data") +
+                theme(legend.position = "none")
+
+            print(p)                        
         })
         
         
