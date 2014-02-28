@@ -88,7 +88,7 @@ shinyServer(
         })
         
         output$stateTotals.dt <- renderTable({
-            bulletin1014.state[, list(YEAR, REV.PER.PUPIL.STATE, EXP.PER.PUPIL.STATE, TCHR_SA.PER.PUPIL.STATE, TCHR_SAL.AVG.STATE, PUPIL.PER.TCHR.STATE)]
+            bulletin1014.state[, list(YEAR, "Revenue per Pupil" = REV.PER.PUPIL.STATE, "Expenditure per Pupil" = EXP.PER.PUPIL.STATE, "Teacher Salary per Pupil" = TCHR_SA.PER.PUPIL.STATE, "Average Teacher Salary" = TCHR_SAL.AVG.STATE, "Student / Teacher Ratio" = PUPIL.PER.TCHR.STATE)]
         })
         
         output$stateTotals.plot <- renderPlot({
