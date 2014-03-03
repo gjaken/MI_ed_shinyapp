@@ -34,7 +34,6 @@ shinyUI(pageWithSidebar(
 
         downloadButton("download.1014", label = "Download Bulletin 1014 Dataset (2004-2012)")
     ),
-        
     
     mainPanel(
 #         h3("Plots and Tables"),
@@ -47,14 +46,20 @@ shinyUI(pageWithSidebar(
 #         h3("Michigan Education: Financial Data "),
         
         tabsetPanel(
-            tabPanel("State Summary",                      
+            tabPanel("State Summary",
+                     h3("Statewide Education Finances"),
                      plotOutput("stateTotals.plot", height="700px", width="600px"),
                      tableOutput("stateTotals.dt")),
             tabPanel("County Summary", # also, a Histogram, faceted on year
+                     h3("County Education Finance Choropleths"),
                      plotOutput("MIcounty.facet.map", height="800px")),   
-            tabPanel("County Drilldown Comparison",
+            tabPanel("County Comparison",
                      h3(textOutput("year.header")),                     
-                     tableOutput("county.comp.table")) # table of county totals comparison, and plot; 2 selectors
+                     tableOutput("county.comp.table")), # table of county totals comparison, and plot; 2 selectors
+            tabPanel("Explore Bulletin1014",
+                     h3("Bulletin 1014 (2004-2012), not adjusted for inflation."),
+                     dataTableOutput("bulletin1014.full.dt")
+                     )
             )
         
         

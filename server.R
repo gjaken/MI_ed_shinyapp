@@ -6,6 +6,7 @@ library(reshape2)
 # Read in dataset ---------------------------------------------------------
 
 # bulletin1014.dt <- fread("bulletin1014.dt.csv")       # Note: NOT Adjusted for Inflation
+bulletin1014.full.dt <- fread("bulletin1014.full.csv")                  # Note: NOT Adjusted for Inflation
 bulletin1014.county <- fread("bulletin1014.county.csv") # Note: Adjusted for Inflation
 MIcounty.map.dt <- fread("MIcounty.map.dt.csv")         # Note: Adjusted for Inflation
 # setkey if it seems useful
@@ -39,9 +40,8 @@ shinyServer(
         
         output$download.1014 <- downloadHandler(    
             filename = "bulletin1014.full.csv",
-            content = function(file) {
-                data <- fread("bulletin1014.full.csv")
-                write.csv(data, file)
+            content = function(file) {                
+                write.csv(bulletin1014.full.dt, file)
             }
         )
         
@@ -156,7 +156,7 @@ shinyServer(
         })
         
         output$year.header <- renderText({
-            paste("County Comparison for",input$year)
+            paste("County Comparison for", input$year)
         })
         
         output$outputSelecter.County1 <- renderUI({            
@@ -167,6 +167,10 @@ shinyServer(
                         selected = "ALCONA"
             )
             
+        })
+        
+        output$bulletin1014.full.dt <- renderDataTable({
+            bulletin1014.full.dt
         })
     #    ## histPlot1 & summary1
     #     output$histPlot1 <- renderPlot({
