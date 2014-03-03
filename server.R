@@ -177,7 +177,7 @@ shinyServer(
         })
         
         output$year.header <- renderText({
-            paste("County Comparison for", input$year)
+            paste("Side-by-Side County Comparison for ", input$year, ", inflation-adjusted", sep="")
         })
         
         output$outputSelecter.County1 <- renderUI({            
@@ -203,26 +203,6 @@ shinyServer(
         output$bulletin1014.full.dt <- renderDataTable({
             bulletin1014.full.dt
         })
-    #    ## histPlot1 & summary1
-    #     output$histPlot1 <- renderPlot({
-    #         # Plot a histogram of AVG.TOTEXP
-    #         # based on year selected
-    #         x<- bulletin1014.dt[YEAR==input$year,AVG.TOTEXP]
-    #         breaks <- pretty(range(x), n = nclass.FD(x), min.n = 1)
-    #         bwidth <- breaks[2]-breaks[1]
-    #         p<- qplot(AVG.TOTEXP, data = bulletin1014.dt[YEAR==input$year], binwidth = bwidth)
-    #         
-    #         print(p)
-    #     })
-    #     
-    #     output$summary1<- renderPrint({
-    #         summary(bulletin1014.dt[YEAR==input$year,AVG.TOTEXP])
-    #     })
-    # 
-    #     ## testTable
-    #     output$testTable<- renderTable({
-    #         bulletin1014.dt[YEAR==input$year]
-    #     })
     
     }
 )

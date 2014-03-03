@@ -12,7 +12,7 @@ shinyUI(pageWithSidebar(
         uiOutput("outputSlider"), 
         
         selectInput("fldnm", "Select Financial Measure",
-                    choices = c("Average Teacher Salary"   = "TCHR_SAL.AVG.COUNTY",
+                    choices = c(# "Average Teacher Salary"   = "TCHR_SAL.AVG.COUNTY",
                                 "Expenditure per Pupil"    = "EXP.PER.PUPIL.COUNTY",
                                 "Revenue per Pupil"        = "REV.PER.PUPIL.COUNTY",                                    
                                 "Student/Teacher Ratio"    = "PUPIL.PER.TCHR.COUNTY"),
@@ -36,23 +36,14 @@ shinyUI(pageWithSidebar(
         downloadButton("download.1014", label = "Download Bulletin 1014 Dataset (2004-2012)")
     ),
     
-    mainPanel(
-#         h3("Plots and Tables"),
-#         
-#         plotOutput("histPlot1"),
-#         verbatimTextOutput("summary1"),
-#         
-#         tableOutput("testTable")
-        
-#         h3("Michigan Education: Financial Data "),
-        
+    mainPanel(    
         tabsetPanel(
             tabPanel("State Summary",
-                     h3("Statewide Education Finances"),
+                     h3("Statewide Education Finances, inflation-adjusted"),
                      plotOutput("stateTotals.plot", height="700px", width="600px"),
                      tableOutput("stateTotals.dt")),
             tabPanel("County Summary", # also, a Histogram, faceted on year
-                     h3("County Education Finance Choropleths"),
+                     h3("County-by-County Education Finance Choropleths, inflation-adjusted"),
                      plotOutput("MIcounty.facet.map", height="800px")),   
             tabPanel("County Comparison",
                      h3(textOutput("year.header")),                     
@@ -61,8 +52,6 @@ shinyUI(pageWithSidebar(
                      h3("Bulletin 1014 (2004-2012), not adjusted for inflation."),
                      dataTableOutput("bulletin1014.full.dt")
                      )
-            )
-        
-        
+            )                
     )   
 ))
