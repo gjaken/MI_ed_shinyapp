@@ -9,7 +9,7 @@ shinyUI(pageWithSidebar(
     
     # Sidebar with a select box input for year
     sidebarPanel( 
-        uiOutput("outputSlider"), #<-- in ui.R sidebarPanel()
+        uiOutput("outputSlider"), 
         
         selectInput("fldnm", "Select Financial Measure",
                     choices = c("Average Teacher Salary"   = "TCHR_SAL.AVG.COUNTY",
@@ -30,11 +30,8 @@ shinyUI(pageWithSidebar(
                     selected = 2012
                     ),
 
-        selectInput("county1", "Select first county for comparison",
-                    choices = c("ALCONA", "MECOSTA"),
-                    selected = "ALCONA"
-                    ),
-        
+        uiOutput("outputSelecter.County1"), # county1 selection menu. "ALCONA" is default.
+
         downloadButton("download.1014", label = "Download Bulletin 1014 Dataset (2004-2012)")
     ),
         

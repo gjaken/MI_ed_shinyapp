@@ -158,6 +158,16 @@ shinyServer(
         output$year.header <- renderText({
             paste("County Comparison for",input$year)
         })
+        
+        output$outputSelecter.County1 <- renderUI({            
+            # dynamically generate slider based on dataset
+            selectInput("county1",
+                        "Select first county for comparison",
+                        choices = unique(bulletin1014.county[,DISTCOUNTY]),
+                        selected = "ALCONA"
+            )
+            
+        })
     #    ## histPlot1 & summary1
     #     output$histPlot1 <- renderPlot({
     #         # Plot a histogram of AVG.TOTEXP
