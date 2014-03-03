@@ -1,7 +1,7 @@
 library(shiny)
 library(ggplot2)
 library(data.table)
-
+library(reshape2)
 
 # Read in dataset ---------------------------------------------------------
 
@@ -36,6 +36,14 @@ MIcounty.map.dt[, `:=` (EXP.PER.PUPIL.COUNTY  = round(EXP.PER.PUPIL.COUNTY,-2),
 # shinyServer function ----------------------------------------------------
 shinyServer(
     function(input, output) {
+        
+        output$download.1014 <- downloadHandler(    
+            filename = "bulletin1014.full.csv",
+            content = function(file) {
+                data <- fread("bulletin1014.full.csv")
+                write.csv(data, file)
+            }
+        )
         
         
         output$outputSlider <- renderUI({    
@@ -93,22 +101,22 @@ shinyServer(
         
         output$stateTotals.plot <- renderPlot({
             # facet label function
-            findata.names <- list(
+            fin.data.names <- list(
                 "REV.PER.PUPIL.STATE" = "Revenue per Pupil",
                 "EXP.PER.PUPIL.STATE" = "Expenditure per Pupil",
                 "TCHR_SA.PER.PUPIL.STATE" = "Teacher Salary per Pupil",
                 "TCHR_SAL.AVG.STATE" = "Average Teacher Salary",
                 "PUPIL.PER.TCHR.STATE" = "Student / Teacher Ratio")
             
-            findata_labeller <- function(variable, value) {
-                return(findata.names[value])
+            fin.data_labeller <- function(variable, value) {
+                return(fin.data.names[value])
             }
             
             # melt and filter for plotting                 
             p <- ggplot(data = melt(bulletin1014.state[, list(YEAR, REV.PER.PUPIL.STATE, EXP.PER.PUPIL.STATE, TCHR_SA.PER.PUPIL.STATE, TCHR_SAL.AVG.STATE, PUPIL.PER.TCHR.STATE)],
                                     id="YEAR")) +
                 geom_line(aes(x = YEAR, y = value, color = variable, name = "datasets"), size = 1) +
-                facet_grid(variable ~ ., scale = 'free_y', labeller = findata_labeller)+
+                facet_grid(variable ~ ., scale = 'free_y', labeller = fin.data_labeller)+
                 xlab("Year") + 
                 ylab("Values (in 2012 $)") +
                 ggtitle("Michigan Educational Financial Data") +

@@ -18,12 +18,15 @@ shinyUI(pageWithSidebar(
                                 "Revenue per Pupil"        = "REV.PER.PUPIL.COUNTY",                                    
                                 "Student/Teacher Ratio"    = "PUPIL.PER.TCHR.COUNTY"),
                     selected = "EXP.PER.PUPIL.COUNTY"
-                    ) # input for dataset choice 
+                    ), # input for dataset choice 
         
         
-#         selectInput("year", 
-#                     "Select year:", 
-#                     choices = 2004:2012)
+        checkboxGroupInput("year", 
+                    "Select year:", 
+                    choices = 2004:2012,
+                    selected = 2004:2012),
+        
+        downloadButton("download.1014", label = "Download Bulletin 1014 Dataset (2004-2012)")
     ),
         
     

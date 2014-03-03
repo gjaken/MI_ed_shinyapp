@@ -44,6 +44,7 @@ bulletin1014.dt$id<- bulletin1014.dt[,paste(YEAR,DCODE,sep="")] # add id column
 bulletin1014.dt$DISTCOUNTY <- str_replace_all(bulletin1014.dt$DISTCOUNTY," (COUNT)(.)?$","") # standardize county naming (without 'county')
 bulletin1014.dt$DISTCOUNTY <- str_replace_all(bulletin1014.dt$DISTCOUNTY,"\\.","") # standardize county naming (without 'county')
 
+write.csv(bulletin1014.dt, "MI_ed_shinyapp/bulletin1014.full.csv", row.names=FALSE)
 bulletin1014.dt <- bulletin1014.dt[T.SAL != 0 & P.TCHR != 0] # filter out academies & unhelpful data points, that throw off T.Sal calcs
 
 
