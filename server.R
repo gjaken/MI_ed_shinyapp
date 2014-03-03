@@ -126,14 +126,14 @@ shinyServer(
         })
         
         output$county.comp.table <- renderTable({
-            total <- t(bulletin1014.county[DISTCOUNTY == input$county1 & YEAR == input$year,
+            total1 <- t(bulletin1014.county[DISTCOUNTY == input$county1 & YEAR == input$year,
                                            list("Expenditure" = round(TOTEXP.COUNTY),
                                                 "Revenue" = round(TOTREV.COUNTY),
                                                 "Teacher Salary" = round(TCHR.SAL.COUNTY),
                                                 "Number of Teachers" = round(TCHR.NUM.COUNTY),
                                                 "Number of Pupils" = round(PUPIL.NUM.COUNTY))])
             
-            per.pupil <- t(bulletin1014.county[DISTCOUNTY == input$county1 & YEAR == input$year,
+            per.pupil1 <- t(bulletin1014.county[DISTCOUNTY == input$county1 & YEAR == input$year,
                                                list("Expenditure" = round(EXP.PER.PUPIL.COUNTY),
                                                     "Revenue" = round(REV.PER.PUPIL.COUNTY),
                                                     "Teacher Salary" = round(TCHR_SA.PER.PUPIL.COUNTY),
@@ -141,16 +141,37 @@ shinyServer(
                                                     "Number of Pupils" = "")])
             
             
-            per.teacher <- t(bulletin1014.county[DISTCOUNTY == input$county1 & YEAR == input$year,
+            per.teacher1 <- t(bulletin1014.county[DISTCOUNTY == input$county1 & YEAR == input$year,
                                                  list("Expenditure" = "",
                                                       "Revenue" = "",
                                                       "Teacher Salary" = round(TCHR_SAL.AVG.COUNTY),
                                                       "Number of Teachers" = "",
                                                       "Number of Pupils" = round(PUPIL.PER.TCHR.COUNTY))])    
             
+            total2 <- t(bulletin1014.county[DISTCOUNTY == input$county2 & YEAR == input$year,
+                                            list("Expenditure" = round(TOTEXP.COUNTY),
+                                                 "Revenue" = round(TOTREV.COUNTY),
+                                                 "Teacher Salary" = round(TCHR.SAL.COUNTY),
+                                                 "Number of Teachers" = round(TCHR.NUM.COUNTY),
+                                                 "Number of Pupils" = round(PUPIL.NUM.COUNTY))])
             
-            county.comparison <- cbind(total, per.pupil, per.teacher)
-            colnames(county.comparison) <- c("Total", "Per Pupil", "Per Teacher")  
+            per.pupil2 <- t(bulletin1014.county[DISTCOUNTY == input$county2 & YEAR == input$year,
+                                                list("Expenditure" = round(EXP.PER.PUPIL.COUNTY),
+                                                     "Revenue" = round(REV.PER.PUPIL.COUNTY),
+                                                     "Teacher Salary" = round(TCHR_SA.PER.PUPIL.COUNTY),
+                                                     "Number of Teachers" = "",
+                                                     "Number of Pupils" = "")])
+            
+            
+            per.teacher2 <- t(bulletin1014.county[DISTCOUNTY == input$county2 & YEAR == input$year,
+                                                  list("Expenditure" = "",
+                                                       "Revenue" = "",
+                                                       "Teacher Salary" = round(TCHR_SAL.AVG.COUNTY),
+                                                       "Number of Teachers" = "",
+                                                       "Number of Pupils" = round(PUPIL.PER.TCHR.COUNTY))])  
+            
+            county.comparison <- cbind(total1, per.pupil1, per.teacher1, total2, per.pupil2, per.teacher2)
+            colnames(county.comparison) <- c("Total 1", "Per Pupil 1", "Per Teacher 1", "Total 2", "Per Pupil 2", "Per Teacher 2")  
             
             county.comparison
         })
@@ -162,7 +183,17 @@ shinyServer(
         output$outputSelecter.County1 <- renderUI({            
             # dynamically generate slider based on dataset
             selectInput("county1",
-                        "Select first county for comparison",
+                        "Select 1st county for comparison",
+                        choices = unique(bulletin1014.county[,DISTCOUNTY]),
+                        selected = "ALCONA"
+            )
+            
+        })
+        
+        output$outputSelecter.County2 <- renderUI({            
+            # dynamically generate slider based on dataset
+            selectInput("county2",
+                        "Select 2nd county for comparison",
                         choices = unique(bulletin1014.county[,DISTCOUNTY]),
                         selected = "ALCONA"
             )

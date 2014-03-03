@@ -31,6 +31,7 @@ shinyUI(pageWithSidebar(
                     ),
 
         uiOutput("outputSelecter.County1"), # county1 selection menu. "ALCONA" is default.
+        uiOutput("outputSelecter.County2"), # county2 selection menu. "ALCONA" is default.
 
         downloadButton("download.1014", label = "Download Bulletin 1014 Dataset (2004-2012)")
     ),
