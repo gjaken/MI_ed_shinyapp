@@ -44,11 +44,8 @@ bulletin1014.dt$id<- bulletin1014.dt[,paste(YEAR,DCODE,sep="")] # add id column
 bulletin1014.dt$DISTCOUNTY <- str_replace_all(bulletin1014.dt$DISTCOUNTY," (COUNT)(.)?$","") # standardize county naming (without 'county')
 bulletin1014.dt$DISTCOUNTY <- str_replace_all(bulletin1014.dt$DISTCOUNTY,"\\.","") # standardize county naming (without 'county')
 
-## work to do when adding disparately structured data
-# a<- rbind.fill(bulletin1014.list)
-# 
-# dt<- copy(bulletin1014.list$y2012)
-# dt = dt[,is.element(names(bulletin1014.list$y2012),names(bulletin1014.list$y2009)), with=FALSE]
+bulletin1014.dt <- bulletin1014.dt[T.SAL != 0 & P.TCHR != 0] # filter out academies & unhelpful data points, that throw off T.Sal calcs
+
 
 # Aggregate by year, county    --------------------------------------------
 
