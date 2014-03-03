@@ -11,8 +11,7 @@ shinyUI(pageWithSidebar(
     sidebarPanel( 
         uiOutput("outputSlider"), #<-- in ui.R sidebarPanel()
         
-        selectInput("fldnm",
-                    "Select Financial Measure",
+        selectInput("fldnm", "Select Financial Measure",
                     choices = c("Average Teacher Salary"   = "TCHR_SAL.AVG.COUNTY",
                                 "Expenditure per Pupil"    = "EXP.PER.PUPIL.COUNTY",
                                 "Revenue per Pupil"        = "REV.PER.PUPIL.COUNTY",                                    
@@ -21,10 +20,20 @@ shinyUI(pageWithSidebar(
                     ), # input for dataset choice 
         
         
-        checkboxGroupInput("year", 
-                    "Select year:", 
+#         checkboxGroupInput("year", 
+#                     "Select year:", 
+#                     choices = 2004:2012,
+#                     selected = 2004:2012),
+
+        selectInput("year", "Select year for county comparison",
                     choices = 2004:2012,
-                    selected = 2004:2012),
+                    selected = 2012
+                    ),
+
+        selectInput("county1", "Select first county for comparison",
+                    choices = c("ALCONA", "MECOSTA"),
+                    selected = "ALCONA"
+                    ),
         
         downloadButton("download.1014", label = "Download Bulletin 1014 Dataset (2004-2012)")
     ),
@@ -46,8 +55,9 @@ shinyUI(pageWithSidebar(
                      tableOutput("stateTotals.dt")),
             tabPanel("County Summary", # also, a Histogram, faceted on year
                      plotOutput("MIcounty.facet.map", height="800px")),   
-            tabPanel("County Drilldown Comparison" #, table of county totals comparison, and plot; 2 selectors
-                     )
+            tabPanel("County Drilldown Comparison",
+                     h3("County Drilldown"),
+                     tableOutput("county.comp.table")) # table of county totals comparison, and plot; 2 selectors
             )
         
         

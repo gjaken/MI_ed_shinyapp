@@ -125,6 +125,35 @@ shinyServer(
             print(p)                        
         })
         
+        output$county.comp.table <- renderTable({
+            total <- t(bulletin1014.county[DISTCOUNTY == input$county1 & YEAR == input$year,
+                                           list("Expenditure" = TOTEXP.COUNTY,
+                                                "Revenue" = TOTREV.COUNTY,
+                                                "Teacher Salary" = TCHR.SAL.COUNTY,
+                                                "Number of Teachers" = TCHR.NUM.COUNTY,
+                                                "Number of Pupils" = PUPIL.NUM.COUNTY)])
+            
+            per.pupil <- t(bulletin1014.county[DISTCOUNTY == input$county1 & YEAR == input$year,
+                                               list("Expenditure" = EXP.PER.PUPIL.COUNTY,
+                                                    "Revenue" = REV.PER.PUPIL.COUNTY,
+                                                    "Teacher Salary" = TCHR_SA.PER.PUPIL.COUNTY,
+                                                    "Number of Teachers" = "",
+                                                    "Number of Pupils" = "")])
+            
+            
+            per.teacher <- t(bulletin1014.county[DISTCOUNTY == input$county1 & YEAR == input$year,
+                                                 list("Expenditure" = "",
+                                                      "Revenue" = "",
+                                                      "Teacher Salary" = TCHR_SAL.AVG.COUNTY,
+                                                      "Number of Teachers" = "",
+                                                      "Number of Pupils" = PUPIL.PER.TCHR.COUNTY)])    
+            
+            
+            county.comparison <- cbind(total, per.pupil, per.teacher)
+            colnames(county.comparison) <- c("Total", "Per Pupil", "Per Teacher")  
+            
+            county.comparison
+        })
         
     #    ## histPlot1 & summary1
     #     output$histPlot1 <- renderPlot({
