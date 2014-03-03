@@ -6,6 +6,7 @@ library(data.table)
 library(stringr)
 library(maps)
 library(maptools)
+library(ggplot2)
 
 
 
@@ -56,8 +57,8 @@ bulletin1014.county <- bulletin1014.dt[, list(TOTEXP.COUNTY = sum(TOTEXP),
                                               TCHR.SAL.COUNTY = sum(T.SAL),
                                               TCHR.NUM.COUNTY = sum(P.TCHR),
                                               PUPIL.NUM.COUNTY = sum(AVG.FTE)
-                                              ),                                       
-                                       by= list(YEAR, DISTCOUNTY)]
+),                                       
+by= list(YEAR, DISTCOUNTY)]
 
 # inflation adjust
 cpi$adjuster <- cpi[Date == date.range[2], Value] / cpi[, Value] # create cpi adjustor, to inflation adjust
@@ -76,7 +77,7 @@ bulletin1014.county[, `:=` (EXP.PER.PUPIL.COUNTY     = TOTEXP.COUNTY / PUPIL.NUM
                             TCHR_SA.PER.PUPIL.COUNTY = TCHR.SAL.COUNTY / PUPIL.NUM.COUNTY,
                             TCHR_SAL.AVG.COUNTY      = TCHR.SAL.COUNTY / TCHR.NUM.COUNTY,
                             PUPIL.PER.TCHR.COUNTY    = PUPIL.NUM.COUNTY / TCHR.NUM.COUNTY)]                    
-            
+
 
 
 # Import map and combine --------------------------------------------------

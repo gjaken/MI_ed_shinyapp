@@ -3,7 +3,7 @@ library(ggplot2)
 library(data.table)
 
 shinyUI(pageWithSidebar(
-  
+    
     # Application title
     headerPanel("Michigan Educational Financial Data"),
     
@@ -13,26 +13,26 @@ shinyUI(pageWithSidebar(
         
         selectInput("fldnm", "Select Financial Measure",
                     choices = c(# "Average Teacher Salary"   = "TCHR_SAL.AVG.COUNTY",
-                                "Expenditure per Pupil"    = "EXP.PER.PUPIL.COUNTY",
-                                "Revenue per Pupil"        = "REV.PER.PUPIL.COUNTY",                                    
-                                "Student/Teacher Ratio"    = "PUPIL.PER.TCHR.COUNTY"),
+                        "Expenditure per Pupil"    = "EXP.PER.PUPIL.COUNTY",
+                        "Revenue per Pupil"        = "REV.PER.PUPIL.COUNTY",                                    
+                        "Student/Teacher Ratio"    = "PUPIL.PER.TCHR.COUNTY"),
                     selected = "EXP.PER.PUPIL.COUNTY"
-                    ), # input for dataset choice 
+        ), # input for dataset choice 
         
         
-#         checkboxGroupInput("year", 
-#                     "Select year:", 
-#                     choices = 2004:2012,
-#                     selected = 2004:2012),
-
+        #         checkboxGroupInput("year", 
+        #                     "Select year:", 
+        #                     choices = 2004:2012,
+        #                     selected = 2004:2012),
+        
         selectInput("year", "Select year for county comparison",
                     choices = 2004:2012,
                     selected = 2012
-                    ),
-
+        ),
+        
         uiOutput("outputSelecter.County1"), # county1 selection menu. "ALCONA" is default.
         uiOutput("outputSelecter.County2"), # county2 selection menu. "ALCONA" is default.
-
+        
         downloadButton("download.1014", label = "Download Bulletin 1014 Dataset (2004-2012)")
     ),
     
@@ -51,7 +51,7 @@ shinyUI(pageWithSidebar(
             tabPanel("Explore Bulletin1014",
                      h3("Bulletin 1014 (2004-2012), not adjusted for inflation."),
                      dataTableOutput("bulletin1014.full.dt")
-                     )
-            )                
+            )
+        )                
     )   
 ))

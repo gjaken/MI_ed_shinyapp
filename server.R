@@ -3,6 +3,9 @@ library(ggplot2)
 library(data.table)
 library(reshape2)
 
+library(maps)
+library(maptools)
+
 # Read in dataset ---------------------------------------------------------
 
 # bulletin1014.dt <- fread("bulletin1014.dt.csv")       # Note: NOT Adjusted for Inflation
@@ -32,7 +35,7 @@ MIcounty.map.dt[, `:=` (EXP.PER.PUPIL.COUNTY  = round(EXP.PER.PUPIL.COUNTY,-2),
                         REV.PER.PUPIL.COUNTY  = round(REV.PER.PUPIL.COUNTY,-2),
                         TCHR_SAL.AVG.COUNTY   = round(TCHR_SAL.AVG.COUNTY,-2),
                         PUPIL.PER.TCHR.COUNTY = round(PUPIL.PER.TCHR.COUNTY,0)
-                        )]
+)]
 
 # shinyServer function ----------------------------------------------------
 shinyServer(
@@ -60,10 +63,10 @@ shinyServer(
                         max = c.max,
                         value = c(max(c.med - c.sd, c.min),
                                   min(c.med + c.sd, c.max))
-                        )
-                        
+            )
+            
         })
-    
+        
         output$MIcounty.facet.map <- renderPlot({
             # code to set range
             if(is.null(input$inputSlider)) # Check for renderUI inputs before loading. If null, then return for now
@@ -74,11 +77,11 @@ shinyServer(
             
             # select dataset and color    
             fld.clr <- switch(input$fldnm,
-                           "EXP.PER.PUPIL.COUNTY"  = "darkgreen",
-                           "REV.PER.PUPIL.COUNTY"  = "darkblue",
-                           "TCHR_SAL.AVG.COUNTY"   = "darkorchid",
-                           "PUPIL.PER.TCHR.COUNTY" = "darkred")
-             
+                              "EXP.PER.PUPIL.COUNTY"  = "darkgreen",
+                              "REV.PER.PUPIL.COUNTY"  = "darkblue",
+                              "TCHR_SAL.AVG.COUNTY"   = "darkorchid",
+                              "PUPIL.PER.TCHR.COUNTY" = "darkred")
+            
             # code for chart
             p<- ggplot(data = MIcounty.map.dt, 
                        aes(x = long, y = lat, group = group)) + 
@@ -121,32 +124,32 @@ shinyServer(
                 ylab("Values (in 2012 $)") +
                 ggtitle("Michigan Educational Financial Data") +
                 theme(legend.position = "none")
-
+            
             print(p)                        
         })
         
         output$county.comp.table <- renderTable({
             total1 <- t(bulletin1014.county[DISTCOUNTY == input$county1 & YEAR == input$year,
-                                           list("Expenditure" = round(TOTEXP.COUNTY),
-                                                "Revenue" = round(TOTREV.COUNTY),
-                                                "Teacher Salary" = round(TCHR.SAL.COUNTY),
-                                                "Number of Teachers" = round(TCHR.NUM.COUNTY),
-                                                "Number of Pupils" = round(PUPIL.NUM.COUNTY))])
+                                            list("Expenditure" = round(TOTEXP.COUNTY),
+                                                 "Revenue" = round(TOTREV.COUNTY),
+                                                 "Teacher Salary" = round(TCHR.SAL.COUNTY),
+                                                 "Number of Teachers" = round(TCHR.NUM.COUNTY),
+                                                 "Number of Pupils" = round(PUPIL.NUM.COUNTY))])
             
             per.pupil1 <- t(bulletin1014.county[DISTCOUNTY == input$county1 & YEAR == input$year,
-                                               list("Expenditure" = round(EXP.PER.PUPIL.COUNTY),
-                                                    "Revenue" = round(REV.PER.PUPIL.COUNTY),
-                                                    "Teacher Salary" = round(TCHR_SA.PER.PUPIL.COUNTY),
-                                                    "Number of Teachers" = "",
-                                                    "Number of Pupils" = "")])
+                                                list("Expenditure" = round(EXP.PER.PUPIL.COUNTY),
+                                                     "Revenue" = round(REV.PER.PUPIL.COUNTY),
+                                                     "Teacher Salary" = round(TCHR_SA.PER.PUPIL.COUNTY),
+                                                     "Number of Teachers" = "",
+                                                     "Number of Pupils" = "")])
             
             
             per.teacher1 <- t(bulletin1014.county[DISTCOUNTY == input$county1 & YEAR == input$year,
-                                                 list("Expenditure" = "",
-                                                      "Revenue" = "",
-                                                      "Teacher Salary" = round(TCHR_SAL.AVG.COUNTY),
-                                                      "Number of Teachers" = "",
-                                                      "Number of Pupils" = round(PUPIL.PER.TCHR.COUNTY))])    
+                                                  list("Expenditure" = "",
+                                                       "Revenue" = "",
+                                                       "Teacher Salary" = round(TCHR_SAL.AVG.COUNTY),
+                                                       "Number of Teachers" = "",
+                                                       "Number of Pupils" = round(PUPIL.PER.TCHR.COUNTY))])    
             
             total2 <- t(bulletin1014.county[DISTCOUNTY == input$county2 & YEAR == input$year,
                                             list("Expenditure" = round(TOTEXP.COUNTY),
@@ -203,6 +206,6 @@ shinyServer(
         output$bulletin1014.full.dt <- renderDataTable({
             bulletin1014.full.dt
         })
-    
+        
     }
 )
