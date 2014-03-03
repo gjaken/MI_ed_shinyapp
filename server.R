@@ -127,16 +127,16 @@ shinyServer(
         
         output$county.comp.table <- renderTable({
             total <- t(bulletin1014.county[DISTCOUNTY == input$county1 & YEAR == input$year,
-                                           list("Expenditure" = TOTEXP.COUNTY,
-                                                "Revenue" = TOTREV.COUNTY,
-                                                "Teacher Salary" = TCHR.SAL.COUNTY,
-                                                "Number of Teachers" = TCHR.NUM.COUNTY,
-                                                "Number of Pupils" = PUPIL.NUM.COUNTY)])
+                                           list("Expenditure" = round(TOTEXP.COUNTY),
+                                                "Revenue" = round(TOTREV.COUNTY),
+                                                "Teacher Salary" = round(TCHR.SAL.COUNTY),
+                                                "Number of Teachers" = round(TCHR.NUM.COUNTY),
+                                                "Number of Pupils" = round(PUPIL.NUM.COUNTY))])
             
             per.pupil <- t(bulletin1014.county[DISTCOUNTY == input$county1 & YEAR == input$year,
-                                               list("Expenditure" = EXP.PER.PUPIL.COUNTY,
-                                                    "Revenue" = REV.PER.PUPIL.COUNTY,
-                                                    "Teacher Salary" = TCHR_SA.PER.PUPIL.COUNTY,
+                                               list("Expenditure" = round(EXP.PER.PUPIL.COUNTY),
+                                                    "Revenue" = round(REV.PER.PUPIL.COUNTY),
+                                                    "Teacher Salary" = round(TCHR_SA.PER.PUPIL.COUNTY),
                                                     "Number of Teachers" = "",
                                                     "Number of Pupils" = "")])
             
@@ -144,9 +144,9 @@ shinyServer(
             per.teacher <- t(bulletin1014.county[DISTCOUNTY == input$county1 & YEAR == input$year,
                                                  list("Expenditure" = "",
                                                       "Revenue" = "",
-                                                      "Teacher Salary" = TCHR_SAL.AVG.COUNTY,
+                                                      "Teacher Salary" = round(TCHR_SAL.AVG.COUNTY),
                                                       "Number of Teachers" = "",
-                                                      "Number of Pupils" = PUPIL.PER.TCHR.COUNTY)])    
+                                                      "Number of Pupils" = round(PUPIL.PER.TCHR.COUNTY))])    
             
             
             county.comparison <- cbind(total, per.pupil, per.teacher)
@@ -155,6 +155,9 @@ shinyServer(
             county.comparison
         })
         
+        output$year.header <- renderText({
+            paste("County Comparison for",input$year)
+        })
     #    ## histPlot1 & summary1
     #     output$histPlot1 <- renderPlot({
     #         # Plot a histogram of AVG.TOTEXP

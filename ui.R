@@ -56,7 +56,7 @@ shinyUI(pageWithSidebar(
             tabPanel("County Summary", # also, a Histogram, faceted on year
                      plotOutput("MIcounty.facet.map", height="800px")),   
             tabPanel("County Drilldown Comparison",
-                     h3("County Drilldown"),
+                     h3(textOutput("year.header")),                     
                      tableOutput("county.comp.table")) # table of county totals comparison, and plot; 2 selectors
             )
         
