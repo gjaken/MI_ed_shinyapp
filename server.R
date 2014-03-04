@@ -6,9 +6,9 @@ library(reshape2)
 # Read in dataset ---------------------------------------------------------
 
 # bulletin1014.dt <- fread("bulletin1014.dt.csv")       # Note: NOT Adjusted for Inflation
-bulletin1014.full.dt <- fread("bulletin1014.full.csv")                  # Note: NOT Adjusted for Inflation
+bulletin1014.full.dt <- fread("bulletin1014.full.csv")  # Note: NOT Adjusted for Inflation
 bulletin1014.county <- fread("bulletin1014.county.csv") # Note: Adjusted for Inflation
-# MIcounty.map.dt <- fread("MIcounty.map.dt.csv")         # Note: Adjusted for Inflation
+# MIcounty.map.dt <- fread("MIcounty.map.dt.csv")       # Note: Adjusted for Inflation
 # setkey if it seems useful
 
 # create totals data at state level

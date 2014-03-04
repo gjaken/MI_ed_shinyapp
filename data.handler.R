@@ -42,6 +42,8 @@ cpi <- fread('MI_ed_shinyapp/FRED.cpi.headline.annual.csv')
 bulletin1014.dt<- rbindlist(bulletin1014.list) # Merge data tables using rbindlist
 bulletin1014.dt$id<- bulletin1014.dt[,paste(YEAR,DCODE,sep="")] # add id column
 
+bulletin1014.dt[, `:=` (DISTNAME = toupper(DISTNAME), DISTCOUNTY = toupper(DISTCOUNTY))] # standardize case
+
 bulletin1014.dt$DISTCOUNTY <- str_replace_all(bulletin1014.dt$DISTCOUNTY," (COUNT)(.)?$","") # standardize county naming (without 'county')
 bulletin1014.dt$DISTCOUNTY <- str_replace_all(bulletin1014.dt$DISTCOUNTY,"\\.","") # standardize county naming (without 'county')
 
