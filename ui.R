@@ -40,6 +40,10 @@ shinyUI(pageWithSidebar(
         
         # Tab 4: Explore Bulletin1014
         conditionalPanel(condition = "input.tabs == 'Explore Bulletin1014'",
+                         a("Bulletin 1014 Layout 2004-2012", href="http://www.michigan.gov/documents/b1014_04_doc_128274_7.pdf", target = "_blank"),
+                         br(),
+                         a("Bulletin 1014 Home (Michigan Department of Education)", href="http://www.michigan.gov/mde/0,1607,7-140-6530_6605-21514--,00.html", target = "_blank"),
+                         br(),
                          downloadButton("download.1014", label = "Download Bulletin 1014 Dataset (2004-2012)")                
         )
                
