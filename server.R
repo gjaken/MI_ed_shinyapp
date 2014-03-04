@@ -133,6 +133,9 @@ shinyServer(
         })
         
         output$county.comp.table <- renderTable({
+            if(is.null(input$county1) | is.null(input$county2) | is.null(input$year)) # Check for renderUI inputs before loading. If null, then return for now
+                return()
+            
             total1 <- t(bulletin1014.county[DISTCOUNTY == input$county1 & YEAR == input$year,
                                             list("Expenditure" = round(TOTEXP.COUNTY),
                                                  "Revenue" = round(TOTREV.COUNTY),
