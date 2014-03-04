@@ -3,15 +3,12 @@ library(ggplot2)
 library(data.table)
 library(reshape2)
 
-library(maps)
-library(maptools)
-
 # Read in dataset ---------------------------------------------------------
 
 # bulletin1014.dt <- fread("bulletin1014.dt.csv")       # Note: NOT Adjusted for Inflation
 bulletin1014.full.dt <- fread("bulletin1014.full.csv")                  # Note: NOT Adjusted for Inflation
 bulletin1014.county <- fread("bulletin1014.county.csv") # Note: Adjusted for Inflation
-MIcounty.map.dt <- fread("MIcounty.map.dt.csv")         # Note: Adjusted for Inflation
+# MIcounty.map.dt <- fread("MIcounty.map.dt.csv")         # Note: Adjusted for Inflation
 # setkey if it seems useful
 
 # create totals data at state level
@@ -29,17 +26,19 @@ bulletin1014.state[, `:=` (REV.PER.PUPIL.STATE     = TOTREV.STATE / PUPIL.NUM.ST
                            TCHR_SAL.AVG.STATE      = TCHR.SAL.STATE / TCHR.NUM.STATE,
                            PUPIL.PER.TCHR.STATE    = PUPIL.NUM.STATE / TCHR.NUM.STATE)]
 
-
-## Round Data for County Map
-MIcounty.map.dt[, `:=` (EXP.PER.PUPIL.COUNTY  = round(EXP.PER.PUPIL.COUNTY,-2),
-                        REV.PER.PUPIL.COUNTY  = round(REV.PER.PUPIL.COUNTY,-2),
-                        TCHR_SAL.AVG.COUNTY   = round(TCHR_SAL.AVG.COUNTY,-2),
-                        PUPIL.PER.TCHR.COUNTY = round(PUPIL.PER.TCHR.COUNTY,0)
-)]
-
 # shinyServer function ----------------------------------------------------
 shinyServer(
     function(input, output) {
+        
+        MIcounty.map.reactive <- reactive({ #reactive function so that other functions are linked to this dataset changing        
+            MIcounty.map.dt <- fread("MIcounty.map.dt.csv")         # Note: Adjusted for Inflation
+            ## Round Data for County Map
+            MIcounty.map.dt[, `:=` (EXP.PER.PUPIL.COUNTY  = round(EXP.PER.PUPIL.COUNTY,-2),
+                                    REV.PER.PUPIL.COUNTY  = round(REV.PER.PUPIL.COUNTY,-2),
+                                    TCHR_SAL.AVG.COUNTY   = round(TCHR_SAL.AVG.COUNTY,-2),
+                                    PUPIL.PER.TCHR.COUNTY = round(PUPIL.PER.TCHR.COUNTY,0)
+            )]
+        })
         
         output$download.1014 <- downloadHandler(    
             filename = "bulletin1014.full.csv",
@@ -50,11 +49,13 @@ shinyServer(
         
         
         output$outputSlider <- renderUI({    
+            MIcounty.map.dt.isolated <- isolate(MIcounty.map.reactive()) # pull in isolated data
+            
             # set min, max, med, sd variables based on dataset            
-            c.med <- median(MIcounty.map.dt[[input$fldnm]])
-            c.sd  <- sd(MIcounty.map.dt[[input$fldnm]])
-            c.min <- min(MIcounty.map.dt[[input$fldnm]])
-            c.max <- max(MIcounty.map.dt[[input$fldnm]])
+            c.med <- median(MIcounty.map.dt.isolated[[input$fldnm]])
+            c.sd  <- sd(MIcounty.map.dt.isolated[[input$fldnm]])
+            c.min <- min(MIcounty.map.dt.isolated[[input$fldnm]])
+            c.max <- max(MIcounty.map.dt.isolated[[input$fldnm]])
             
             # dynamically generate slider based on dataset
             sliderInput("inputSlider",
@@ -72,21 +73,24 @@ shinyServer(
             if(is.null(input$inputSlider)) # Check for renderUI inputs before loading. If null, then return for now
                 return()
             
-            MIcounty.map.dt[[input$fldnm]] <- pmax(MIcounty.map.dt[[input$fldnm]], input$inputSlider[1]) # sets min
-            MIcounty.map.dt[[input$fldnm]] <- pmin(MIcounty.map.dt[[input$fldnm]], input$inputSlider[2]) # sets max
+            MIcounty.map.dt.isolated <- isolate(MIcounty.map.reactive()) # pull in isolated dataset
+            fldnm.isolated <- isolate(input$fldnm) # pull in isolated field name (fldnm)
+            
+            MIcounty.map.dt.isolated[[fldnm.isolated]] <- pmax(MIcounty.map.dt.isolated[[fldnm.isolated]], input$inputSlider[1]) # sets min
+            MIcounty.map.dt.isolated[[fldnm.isolated]] <- pmin(MIcounty.map.dt.isolated[[fldnm.isolated]], input$inputSlider[2]) # sets max
             
             # select dataset and color    
-            fld.clr <- switch(input$fldnm,
+            fld.clr <- switch(fldnm.isolated,
                               "EXP.PER.PUPIL.COUNTY"  = "darkgreen",
                               "REV.PER.PUPIL.COUNTY"  = "darkblue",
                               "TCHR_SAL.AVG.COUNTY"   = "darkorchid",
                               "PUPIL.PER.TCHR.COUNTY" = "darkred")
             
             # code for chart
-            p<- ggplot(data = MIcounty.map.dt, 
+            p<- ggplot(data = MIcounty.map.dt.isolated, 
                        aes(x = long, y = lat, group = group)) + 
                 labs(title = "Michigan Education: Per Pupil Finances") +
-                geom_polygon(aes_string(fill = input$fldnm)) + 
+                geom_polygon(aes_string(fill = fldnm.isolated)) + 
                 scale_fill_gradient(high = fld.clr, low = "white") + 
                 facet_wrap(~ YEAR, ncol = 3) + 
                 geom_path(color = "black", linestyle = 2) +

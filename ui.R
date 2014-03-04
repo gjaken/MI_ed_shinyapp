@@ -12,7 +12,7 @@ shinyUI(pageWithSidebar(
         uiOutput("outputSlider"), 
         
         selectInput("fldnm", "Select Financial Measure",
-                    choices = c(# "Average Teacher Salary"   = "TCHR_SAL.AVG.COUNTY",
+                    choices = c("Average Teacher Salary"   = "TCHR_SAL.AVG.COUNTY",
                         "Expenditure per Pupil"    = "EXP.PER.PUPIL.COUNTY",
                         "Revenue per Pupil"        = "REV.PER.PUPIL.COUNTY",                                    
                         "Student/Teacher Ratio"    = "PUPIL.PER.TCHR.COUNTY"),
