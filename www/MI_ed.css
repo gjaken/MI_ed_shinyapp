@@ -1,0 +1,20 @@
+#stateTotals\.dt, #county\.comp\.table
+{
+font-family:Helvetica, Arial, sans-serif !important;
+border-collapse:collapse;
+}
+#stateTotals\.dt td, #county\.comp\.table td
+{
+    font-family:Arial, sans-serif !important;
+}
+#stateTotals\.dt th, #county\.comp\.table th
+{
+font-size:1.1em;
+text-align:left;
+padding-top:5px;
+padding-bottom:4px;
+background-color:#A7C942;
+color:#ffffff;
+}
+#stateTotals\.dt tr:nth-child(odd), #county\.comp\.table tr:nth-child(odd){ background-color:#EAF2D3; }
+#stateTotals\.dt tr:nth-child(even), #county\.comp\.table tr:nth-child(even)    { background-color:#ffffff; }
