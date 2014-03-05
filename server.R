@@ -181,7 +181,12 @@ shinyServer(
                                                        "Number of Pupils" = round(PUPIL.PER.TCHR.COUNTY))])  
             
             county.comparison <- cbind(total1, per.pupil1, per.teacher1, total2, per.pupil2, per.teacher2)
-            colnames(county.comparison) <- c("Total 1", "Per Pupil 1", "Per Teacher 1", "Total 2", "Per Pupil 2", "Per Teacher 2")  
+            colnames(county.comparison) <- c(paste("Total", input$county1),
+                                             paste("Per Pupil", input$county1),
+                                             paste("Per Teacher", input$county1), 
+                                             paste("Total", input$county2),
+                                             paste("Per Pupil", input$county2),
+                                             paste("Per Teacher", input$county2))  
             
             county.comparison
         })

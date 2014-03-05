@@ -49,7 +49,11 @@ shinyUI(pageWithSidebar(
                
     ),
    
-    mainPanel(    
+    mainPanel(
+        tags$head(
+            tags$link(rel = 'stylesheet',
+                       type = 'text/css',
+                       href = 'MI_ed.css')),
         tabsetPanel(id = "tabs",
                     
             tabPanel("Statewide Summary",
